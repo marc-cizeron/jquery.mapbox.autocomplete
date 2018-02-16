@@ -1,0 +1,36 @@
+.address-autocomplete-wrapper {
+    position: relative;
+}
+
+input.mbaa-address-autocomplete {
+    border-radius: 4px 4px 0px 0px;
+}
+
+ul.mbaa-results-list {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+}
+
+ul.mbaa-results-list.mbaa-fill {
+    border-radius: 0px 0px 0px 0px;
+    -moz-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+    margin: 0 auto;
+    padding-left: 0px;
+    margin-top: -1px;
+    display: block;
+}
+
+ul.mbaa-results-list li.mbaa {
+    list-style-type: none;
+    display: block;
+    padding: 5px;
+}
+
+ul.mbaa-results-list li.mbaa:hover, ul.mbaa-results-list li.mbaa.selected {
+    background-color: #EEEEEE;
+    cursor: pointer;
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title>Jquery mapbox geocoder</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'
+          type='text/css'/>
+    <link rel='stylesheet' href='jquery.mapbox.geocoder/dist/bootstrap-theme.min.css' type='text/css'/>
+
+    <style>
+        pre {
+            outline: 1px solid #ccc;
+            padding: 5px;
+            margin: 5px;
+        }
+
+        .string {
+            color: green;
+        }
+
+        .number {
+            color: darkorange;
+        }
+
+        .boolean {
+            color: blue;
+        }
+
+        .null {
+            color: magenta;
+        }
+
+        .key {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-16">
+            <div class="jumbotron">
+                <h1>Jquery mapbox geocoder</h1>
+                <form>
+                    <div class="form-group">
+                        <label for="token">Mapbox token</label>
+                        <input type="text" class="form-control" id="token"
+                               placeholder="access token">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address-autocomplete">Posta address</label>
+                        <input type="text" class="form-control" id="address-autocomplete"
+                               placeholder="address">
+                    </div>
+                </form>
+                <div id="json-response"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
+<script src='jquery.mapbox.geocoder/dist/jquery.mapbox.geocoder.min.js'></script>
+
+<script>
+    (function ($) {
+        function syntaxHighlight(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+
+        var inputAddress = $('#address-autocomplete').mapboxAutocomplete({
+            accessToken: token,
+            endpoint: 'https://api.mapbox.com/geocoding/v5/',
+            mode: 'mapbox.places',
+            language: 'fr',
+            width: '100%',
+            zindex: '1000'
+        }).on('mapboxAutocomplete.found.address', function (e, object, feature) {
+            $('#json-response').html('<pre></pre>');
+            var objectHtml = '<pre>' + syntaxHighlight(JSON.stringify(object, null, 4)) + '</pre>';
+            var featureHtml = '<pre>' + syntaxHighlight(JSON.stringify(feature, null, 4)) + '</pre>';
+            var html = '<h2>Object</h2>' + objectHtml + '<h2>Feature</h2>' + featureHtml;
+            $('#json-response').html(html);
+        });
+
+
+        $('#token').on('keyup keypress blur change', function () {
+            var token = $(this).val();
+            inputAddress.mapboxAutocomplete('options', 'accessToken', token);
+        });
+
+    })(jQuery);
+</script>
+
+</body>
+</html>
